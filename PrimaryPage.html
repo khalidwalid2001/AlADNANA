@@ -405,8 +405,8 @@ document.getElementById('logout-link').addEventListener('click', function (event
                                 if (headerCell && typeof headerCell.v === 'string' && cell) {
                                     row[headerCell.v.trim()] = cell.v;
                                 } else if (headerCell && typeof headerCell.v !== 'string') {
-                                    // Handle cases where headerCell.v is not a string (optional)
-                                    console.warn(`Header cell value at ${headerAddress} is not a string:`, headerCell.v);
+                                                                  row[headerCell.w.trim()] = cell.w;
+
                                 }
                             }
                             // Stop processing rows if "الاســـــــــــم" cell is empty
@@ -475,7 +475,7 @@ document.getElementById('logout-link').addEventListener('click', function (event
                 return jsonData.filter(data => {
                     const keys = Object.keys(data);
                     if (keys.length !== 8) return false;
-                    return keys.every(key => data[key].trim() !== "");
+                    return keys.every(key => data[key] !== "");
                 });
             }
             catch (ex) {
