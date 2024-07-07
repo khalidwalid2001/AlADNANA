@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Al-Adnan Travel & Tourism</title>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+ <script>
+      let config = {};
+      function loadConfig() {
+    return fetch('./config.json')
+      .then(response => response.json())
+      .then(data => {
+        config = data;
+        console.log('Configuration loaded:', config);
+      })
+      .catch(error => {
+        console.error('Error loading configuration:', error);
+      });
+  }
+function encryptAES(text) {
+    const secretKey = "wv+l5x1m7kazmlAIyWNO0g==";
+    const key = CryptoJS.enc.Base64.parse(secretKey);
+    const iv = CryptoJS.lib.WordArray.random(16);
+    const encrypted = CryptoJS.AES.encrypt(text, key, {
+        iv: iv,
+        padding: CryptoJS.pad.Pkcs7,
+        mode: CryptoJS.mode.CBC
+    });
+    const ciphertext = iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
+    return ciphertext;
+}
+
+
+
+async function loginRequest(email, password) {
+    try {
+        // Encrypt the password using the email as the secret key
+        const encryptedPassword = encryptAES(password); 
+
+        // Send a POST request to the API
+        const response = await fetch(config.apiBaseUrl+'/Auth/Login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email, // Include the email directly
+                password: encryptedPassword // Include the encrypted password
+            })
+        });
+
+        // Handle the response
+        if (response.ok) {
+ 
+                         const responseData = await response.json(); // Parse JSON response
+                         const encryptionKey = responseData.encryptionKey;
+                         const keyExpiration = new Date().getTime() + (15 * 60 * 1000); // 15 minutes in milliseconds
+
+    // Save the key and expiration time in session storage
+    sessionStorage.setItem('encryptionKey', encryptionKey);
+    sessionStorage.setItem('encryptionKeyExpiration', keyExpiration.toString());
+            window.location.href = "./PrimaryPage.html";
+        } else if (response.status === 404) {
+            // Handle user not found
+            alert('Login failed. User not found.');
+        } else {
+            // Handle other login failures
+            const errorData = await response.text();
+            alert(`Login failed: ${errorData}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    }
+ 
+}
+async function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Basic validation
+    if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+    }
+
+    if (!validateEmail(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+   
+    loginRequest(email,password);
+ 
+}
+
+function validateEmail(email) {
+    // Basic email validation pattern
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return re.test(String(email).toLowerCase());
+}
+document.addEventListener('DOMContentLoaded', () => {
+    loadConfig() ;
+  });
+
+ </script>
+ <style>
+ /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #e4c4cf29, #cb9faf); /* Gradient background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-container {
+    background-color: white;
+    padding: 2.5em;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+    max-width: 100%;
+}
+
+.logo img {
+    width: 120px;
+    margin-bottom: 1.5em;
+}
+
+h1 {
+    color: #8B0000; /* Deep burgundy/maroon */
+    margin-bottom: 1.5em;
+}
+
+.input-group {
+    margin-bottom: 1.2em;
+    position: relative;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.75em;
+    border: 1px solid #DDDDDD;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.3s;
+    font-size: 1em;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #8B0000; /* Deep burgundy/maroon */
+}
+
+.login-button {
+    background-color: #8B0000; /* Deep burgundy/maroon */
+    color: white;
+    padding: 0.75em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.login-button:hover {
+    background-color: #A52A2A; /* Slightly lighter maroon */
+}
+
+ </style>
+ 
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="logo">
+                <img src="./PrimaryImage.jpg" alt="Al-Adnan Travel & Tourism Logo">
+            </div>
+            <h1>Login</h1>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="button" onclick="login()" class="login-button">Login</button>
+            </form>
+        </div>
+    </div>
+
+     
+</body>
+</html>
