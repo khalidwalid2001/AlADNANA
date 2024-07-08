@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Company Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+ <!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+
+<!-- DataTables JS -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+
+
+
+
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e4c4cf29;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            object-fit: cover;
+            height: 48px;
+        }
+
+        .navbar-brand span {
+            font-size: 2rem;
+            margin-left: 10px;
+            color: #8e1c46;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .mt-custom {
+            margin-top: 5rem !important;
+        }
+
+        .table-container {
+    max-height: 400px; /* Set the desired height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin-top: 1rem; /* Optional: spacing above the container */
+    border: 1px solid #ddd; /* Optional: border around the container */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.table {
+    width: 100%; /* Ensure the table takes the full width of the container */
+    border-collapse: collapse; /* Optional: for cleaner borders */
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background: white; /* Background color to prevent overlap issues */
+    z-index: 1; /* Ensures the header stays on top */
+}
+
+th, td {
+    border: 1px solid #ddd; /* Optional: table borders */
+    padding: 8px; /* Optional: padding for better spacing */
+    text-align: left; /* Optional: text alignment */
+}
+
+/* Custom scrollbar styles */
+.table-container::-webkit-scrollbar {
+    width: 12px; /* Width of the vertical scrollbar */
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Track background color */
+    border-radius: 5px; /* Optional: rounded corners for track */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Scrollbar thumb color */
+    border-radius: 5px; /* Rounded corners for scrollbar thumb */
+    border: 3px solid #f1f1f1; /* Adds space around the thumb */
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color when hovering over the scrollbar thumb */
+}
+
+
+
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light"
+        style="background-color: rgb(110 4 44 / 26%) !important;">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand" href="#">
+                    <img src="./PrimaryImage.jpg" alt="Red Logo" class="nav-icon">
+                    <span>Al-ADNANA</span>
+                </a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./PrimaryPage.html">Primary Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./SecPage.html">Secondary Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./ExeclFiles.html">ExeclFiles Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logout-link">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-custom">
+        <h2>File Upload and Management</h2>
+        <button type="button" class="btn btn-primary" id="openUploadModal">Add Files</button>
+
+        <div class="table-container mt-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>File Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="fileTableBody">
+                    <!-- Table rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for File Upload -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Files</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="upload-form">
+                        <div class="mb-3">
+                            <label for="excelFile" class="form-label">Upload Excel File</label>
+                            <input class="form-control" type="file" id="excelFile" accept=".xlsx, .xls">
+                        </div>
+                        <div class="mb-3">
+                            <label for="imageFile" class="form-label">Upload Image File</label>
+                            <input class="form-control" type="file" id="imageFile" accept="image/*">
+                        </div>
+                       
+                        <button type="button" class="btn btn-primary" id="saveFilesButton">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                      let config = {};
+
+                      function checkEncryptionKeyExpiration() {
+        // Retrieve encryption key and expiration time from sessionStorage
+        const encryptionKey = sessionStorage.getItem('encryptionKey');
+        const keyExpiration = sessionStorage.getItem('encryptionKeyExpiration');
+    
+        // Check if encryptionKey is not defined or null
+        if (!encryptionKey) {
+            handleExpiredKey();
+            return false;
+        }
+    
+        // Check if keyExpiration is not defined or key has expired
+        if (!keyExpiration || new Date().getTime() > parseInt(keyExpiration, 10)) {
+            handleExpiredKey();
+            return false;
+        }
+    
+        // Key is valid
+        return true;
+    }
+    
+    function handleExpiredKey() {
+         sessionStorage.removeItem('encryptionKey');
+        sessionStorage.removeItem('encryptionKeyExpiration');
+    
+         window.location.href = "./login.html";
+         event.preventDefault();
+
+    }
+    
+$(document).ready(function () {
+    loadConfig();
+    checkEncryptionKeyExpiration();
+    $('#openUploadModal').click(function () {
+        $('#uploadModal').modal('show');
+    });
+
+    $('#saveFilesButton').click(async function () {
+        const excelFile = $('#excelFile')[0].files[0];
+        const imageFile = $('#imageFile')[0].files[0];
+
+        if (!excelFile || !imageFile) {
+            Swal.fire('Error', 'Both files are required!', 'error');
+            return;
+        }
+
+        try {
+            const excelBase64 = await toBase64(excelFile);
+            const imageBase64 = await toBase64(imageFile);
+
+            const data = {
+                excelFile: excelBase64,
+                imageFile: imageBase64,
+                excelFileName: excelFile.name,
+                imageFileName: imageFile.name
+            };
+
+            const response = await fetch(config.apiBaseUrl+'/Primary/upload', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                Swal.fire('Success', 'Files uploaded successfully!', 'success');
+                $('#uploadModal').modal('hide');
+                const newRow = `
+                    <tr>
+                        <td>${result.id}</td>
+                        <td>${excelFile.name}</td>
+                        <td>
+                            <button class="btn btn-secondary downloadButton" data-file-id="${result.id}">Download</button>
+                        </td>
+                    </tr>
+                `;
+                $('#fileTableBody').append(newRow);
+            } else {
+                Swal.fire('Error', 'File upload failed!', 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'File upload failed!', 'error');
+        }
+    });
+
+    function toBase64(file) {
+        checkEncryptionKeyExpiration();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    
+});
+
+function fetchFiles() {
+    checkEncryptionKeyExpiration();
+        fetch(config.apiBaseUrl+'/Primary/GetFile', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Files:', data);
+
+            // Example: Display files in a table
+            const fileTableBody = document.getElementById('fileTableBody');
+            fileTableBody.innerHTML = ''; // Clear previous content
+
+            data.forEach(file => {
+                const row = `
+                    <tr>
+                        <td>${file.id}</td>
+                        <td>${file.excelFileName}</td>
+                       
+                        <td>
+                             <button class="btn btn-secondary downloadButton" onclick="downloadFile(${file.id})">Download</button>
+                        </td>
+                    </tr>
+                `;
+                fileTableBody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching files:', error);
+            // Handle error, e.g., show an alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Fetch Failed',
+                text: 'There was an error fetching the files.',
+            });
+        });
+    }
+    function base64toBlob(base64Data, contentType) {
+        checkEncryptionKeyExpiration();
+    contentType = contentType || '';
+    const sliceSize = 512;
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: contentType });
+}
+
+
+function downloadFile(fileId) {
+    checkEncryptionKeyExpiration();
+        fetch(config.apiBaseUrl+'/Primary/GetFileId?id='+fileId, {
+    method: 'GET',
+    headers: {
+        'Accept': '*/*'
+    }
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    
+    return response.json();
+})
+.then(data => {
+const base64Content = data.excelFile.split(',')[1];
+const blob = base64toBlob(base64Content, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+const url = URL.createObjectURL(blob);
+const link = document.createElement('a');
+link.href = url;
+link.download = data.excelFileName;
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+URL.revokeObjectURL(url);
+
+
+const base64Content1 = data.imageFile.split(',')[1];
+const blob1 = base64toBlob(base64Content1, 'image/jpeg');
+const url1 = URL.createObjectURL(blob1);
+const link1 = document.createElement('a');
+link1.href = url1;
+link1.download = data.imageFileName;
+document.body.appendChild(link1);
+link1.click();
+document.body.removeChild(link1);
+URL.revokeObjectURL(url1);
+
+
+
+})
+.catch(error => {
+    console.error('Error fetching data:', error);
+    // Handle errors
+});
+    }
+    
+    function loadConfig() {
+    return fetch('./config.json')
+      .then(response => response.json())
+      .then(data => {
+        config = data;
+        console.log('Configuration loaded:', config);
+        checkEncryptionKeyExpiration();
+        fetchFiles();
+
+      })
+      .catch(error => {
+        console.error('Error loading configuration:', error);
+      });
+    }
+</script>
+</html>
