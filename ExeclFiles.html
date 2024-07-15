@@ -77,7 +77,7 @@ thead th {
 th, td {
     border: 1px solid #ddd; /* Optional: table borders */
     padding: 8px; /* Optional: padding for better spacing */
-    text-align: left; /* Optional: text alignment */
+    text-align: right; /* Optional: text alignment */
 }
 
 /* Custom scrollbar styles */
@@ -120,7 +120,7 @@ th, td {
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-       <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="./PrimaryPage.html">الصفحة الرئيسية</a>
@@ -139,17 +139,17 @@ th, td {
         </div>
     </nav>
 
-    <div class="container mt-custom">
-        <h2>File Upload and Management</h2>
-        <button type="button" class="btn btn-primary" id="openUploadModal">Add Files</button>
+    <div class="container mt-custom" style="direction: rtl;">
+        <h2>ادارة الملفات وتنزيلها</h2>
+        <button type="button" class="btn btn-primary" id="openUploadModal">اضافة ملف</button>
 
-        <div class="table-container mt-4">
-            <table class="table">
+        <div class="table-container mt-4" >
+            <table class="table" style="direction: rtl;text-align: right;"  >
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>File Name</th>
-                        <th>Actions</th>
+                        <th>رقم</th>
+                        <th>اسم الملف</th>
+                        <th>العملبة</th>
                     </tr>
                 </thead>
                 <tbody id="fileTableBody">
@@ -263,11 +263,13 @@ $(document).ready(function () {
                         <td>${result.id}</td>
                         <td>${excelFile.name}</td>
                         <td>
-                            <button class="btn btn-secondary downloadButton" data-file-id="${result.id}">Download</button>
+                            <button class="btn btn-secondary downloadButton" data-file-id="${result.id}">تنزيل</button>
                         </td>
                     </tr>
                 `;
                 $('#fileTableBody').append(newRow);
+                location.reload();
+
             } else {
                 Swal.fire('Error', 'File upload failed!', 'error');
             }
@@ -318,7 +320,7 @@ function fetchFiles() {
                         <td>${file.excelFileName}</td>
                        
                         <td>
-                             <button class="btn btn-secondary downloadButton" onclick="downloadFile(${file.id})">Download</button>
+                             <button class="btn btn-secondary downloadButton" onclick="downloadFile(${file.id})">تنزيل</button>
                         </td>
                     </tr>
                 `;
