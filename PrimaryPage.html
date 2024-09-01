@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.2.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
 
 
@@ -66,6 +67,10 @@
             margin-top: 5rem !important;
             /* Increase the top margin */
         }
+
+
+
+        
     </style>
 </head>
 
@@ -75,8 +80,7 @@
         <div class="container-fluid">
             <div class="d-flex align-items-center">
                 <a class="navbar-brand" href="#">
-                    <img src="./PrimaryImage.jpg" alt="Red Logo"
-                        class="nav-icon">
+                    <img src="./PrimaryImage.jpg" alt="Red Logo" class="nav-icon">
                     <span>Al-ADNANA</span>
                 </a>
             </div>
@@ -84,16 +88,16 @@
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+       <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="./PrimaryPage.html">Primary Page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./SecPage.html">Secondary Page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="logout-link">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logout-link">تسجيل خروج</a>
                     </li>
                 </ul>
             </div>
@@ -118,17 +122,8 @@
 
             </div>
         </div>
-        <table class="table table-bordered table-striped" id="data-table">
             <thead class="thead-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Nationality</th>
-                    <th>Date of Birth</th>
-                    <th>Mother’s Name</th>
-                    <th>Passport Number</th>
-                    <th>Date of Issue</th>
-                    <th>Expiration Date</th>
-                    <th>Embassy</th>
                 </tr>
             </thead>
             <tbody>
@@ -192,20 +187,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table">
                         <thead>
                             <tr>
-                                <th>Id</th>
 
-                                <th>Name</th>
-                                <th>Nationality</th>
-                                <th>Date of Birth</th>
-                                <th>Mother’s Name</th>
-                                <th>Passport Number</th>
-                                <th>Date of Issue</th>
-                                <th>Expiration Date</th>
-                                <th>Embassy</th>
-                                <th>Actions</th> <!-- New column header -->
                             </tr>
                         </thead>
                         <tbody id="resultBody">
@@ -220,17 +204,17 @@
         </div>
     </div>
     <script>
-      let config = {};
+        let config = {};
 
 
-document.getElementById('logout-link').addEventListener('click', function (event) {
-    event.preventDefault(); // Prevent the default link behavior
-    window.location.href = "./login.html";
-    sessionStorage.removeItem('encryptionKey');
-    const keyExpiration = sessionStorage.removeItem('encryptionKeyExpiration');
-    event.preventDefault(); // Prevent the default link behavior
+        document.getElementById('logout-link').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default link behavior
+            window.location.href = "./login.html";
+            sessionStorage.removeItem('encryptionKey');
+            const keyExpiration = sessionStorage.removeItem('encryptionKeyExpiration');
+            event.preventDefault(); // Prevent the default link behavior
 
-});
+        });
 
 
 
@@ -292,7 +276,6 @@ document.getElementById('logout-link').addEventListener('click', function (event
             }
 
             // Send data to server via fetch
-            fetch(config.apiBaseUrl+'/Primary/SaveData', {
                 method: 'POST',
                 headers: {
                     'Accept': 'text/plain',
@@ -369,9 +352,9 @@ document.getElementById('logout-link').addEventListener('click', function (event
                     cell.contentEditable = true; // Make cells editable
                 }
             };
-      
-      
-      
+
+
+
         });
         function handleFileUpload(event) {
             checkEncryptionKeyExpiration();
@@ -403,10 +386,7 @@ document.getElementById('logout-link').addEventListener('click', function (event
                                 const headerAddress = XLSX.utils.encode_cell({ r: startRow, c: colNum });
                                 const headerCell = worksheet[headerAddress];
                                 if (headerCell && typeof headerCell.v === 'string' && cell) {
-                                    row[headerCell.v.trim()] = cell.v;
                                 } else if (headerCell && typeof headerCell.v !== 'string') {
-                                    // Handle cases where headerCell.v is not a string (optional)
-                                    console.warn(`Header cell value at ${headerAddress} is not a string:`, headerCell.v);
                                 }
                             }
                             // Stop processing rows if "الاســـــــــــم" cell is empty
@@ -475,7 +455,6 @@ document.getElementById('logout-link').addEventListener('click', function (event
                 return jsonData.filter(data => {
                     const keys = Object.keys(data);
                     if (keys.length !== 8) return false;
-                    return keys.every(key => data[key].trim() !== "");
                 });
             }
             catch (ex) {
@@ -494,7 +473,6 @@ document.getElementById('logout-link').addEventListener('click', function (event
 
             var searchValue = document.getElementById('search').value;
 
-            var url = config.apiBaseUrl+'/Primary/SearchData?query=' + encodeURIComponent(searchValue);
 
             fetch(url)
                 .then(response => response.json())
@@ -545,8 +523,7 @@ document.getElementById('logout-link').addEventListener('click', function (event
 
                         resultBody.appendChild(row);
                     });
-                    if(data.data.length>0)
-                    ColoringRows(data.data);
+                        ColoringRows(data.data);
                     // Show the modal using Bootstrap 5
                     var resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
                     resultModal.show();
@@ -583,7 +560,6 @@ document.getElementById('logout-link').addEventListener('click', function (event
                 }
                 worksheetData.push(rowData);
             }
-
             // Create a worksheet with the collected data
             const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
@@ -631,7 +607,6 @@ document.getElementById('logout-link').addEventListener('click', function (event
 
 
         function updateRowColor(id, color) {
-            fetch(config.apiBaseUrl+'/Primary/UpdateRowColor', {
                 method: 'POST',
                 headers: {
                     'Accept': '*/*',
@@ -668,51 +643,112 @@ document.getElementById('logout-link').addEventListener('click', function (event
             getRowColors(idsString);
         }
         function getRowColors(idsString) {
-    fetch(config.apiBaseUrl+'/Primary/GetRowColors', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(idsString)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Row colors:', data);
-        // Apply the colors to the rows
-        data.forEach(item => {
-            var row = document.getElementById(`row-${item.tableDataId}`);
-            if (row) {
-                var cells = row.getElementsByTagName('td');
-                for (var i = 0; i < cells.length; i++) {
-                    cells[i].style.backgroundColor = item.color;
-                }
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(idsString)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Row colors:', data);
+                    // Apply the colors to the rows
+                    data.forEach(item => {
+                        var row = document.getElementById(`row-${item.tableDataId}`);
+                        if (row) {
+                            var cells = row.getElementsByTagName('td');
+                            for (var i = 0; i < cells.length; i++) {
+                                cells[i].style.backgroundColor = item.color;
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Fetch Failed',
+                        text: 'There was an error fetching the row colors.',
+                    });
+                });
+        }
+
+        function loadConfig() {
+            return fetch('./config.json')
+                .then(response => response.json())
+                .then(data => {
+                    config = data;
+                    console.log('Configuration loaded:', config);
+                })
+                .catch(error => {
+                    console.error('Error loading configuration:', error);
+                });
+        }
+
+
+
+        async function readExcelFromURL(data) {
+            try {
+                // Remove the first row
+                const modifiedData = data.slice(1);
+
+                // Fetch the Excel template file
+                const response = await fetch('./templete1.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+
+                // Create a new ExcelJS workbook
+                const workbook = new ExcelJS.Workbook();
+                await workbook.xlsx.load(arrayBuffer);
+
+                // Get the first sheet
+                const sheet = workbook.worksheets[0];
+                sheet.views = [
+                    { rightToLeft: true }
+                ];
+                // Apply right-to-left text alignment and font size to all cells
+                sheet.eachRow({ includeEmpty: true }, function (row) {
+                    row.eachCell({ includeEmpty: true }, function (cell) {
+                        cell.font = { size: 15 };
+                    });
+                });
+
+                // Modify the sheet with your data
+                const startRow = 4; // Row index in Excel (1-based) for B4
+                const startCol = 2; // Column index in Excel (1-based) for B
+
+                // Fill data starting from row 4 (B4) to endRow and from column B to I
+                modifiedData.forEach((row, rowIndex) => {
+                    row.forEach((value, colIndex) => {
+                        const cell = sheet.getRow(startRow + rowIndex).getCell(startCol + colIndex);
+                        cell.value = value;
+                        // Apply right-to-left text alignment and font size
+                        cell.font = { size: 15 };
+                    });
+                });
+
+                // Convert workbook to Blob for saving
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Download the modified Excel file
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'modified_template.xlsx'; // Provide a default filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                console.log('Modified Excel file downloaded.');
+
+                return true;
+            } catch (error) {
+                console.error('Error reading or modifying Excel file:', error);
+                return false;
             }
-        });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Fetch Failed',
-            text: 'There was an error fetching the row colors.',
-        });
-    });
-}
-
-function loadConfig() {
-    return fetch('./config.json')
-      .then(response => response.json())
-      .then(data => {
-        config = data;
-        console.log('Configuration loaded:', config);
-      })
-      .catch(error => {
-        console.error('Error loading configuration:', error);
-      });
-    }
-
-
+        }
 
 
 

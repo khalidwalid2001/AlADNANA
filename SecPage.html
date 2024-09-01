@@ -6,22 +6,21 @@
     <title>Company Page</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.10/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert library -->
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
 
 
     <style>
         body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #e4c4cf29; /* Gradient background */
-   
-}
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+
         /* Custom CSS for modal width */
         .modal-dialog.modal-50 {
             max-width: 50%;
@@ -68,12 +67,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light" style="background-color: rgb(110 4 44 / 26%) !important;">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
                 <a class="navbar-brand" href="#">
-                    <img src="./PrimaryImage.jpg" alt="Red Logo"
-                        class="nav-icon">
                     <span>Al-ADNANA</span>
                 </a>
             </div>
@@ -84,13 +80,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="./PrimaryPage.html">Primary Page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./SecPage.html">Secondary Page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="logout-link">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logout-link">تسجيل خروج</a>
                     </li>
                 </ul>
             </div>
@@ -115,15 +111,8 @@
 
             </div>
         </div>
-        <table class="table table-bordered table-striped" id="data-table">
             <thead class="thead-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Nationality</th>
-                    <th>Date of Birth</th>
-                    <th>Passport Number</th>
-                    <th>Expiration Date</th>
-                    <th>Approval Number</th>
                 </tr>
             </thead>
             <tbody>
@@ -158,7 +147,7 @@
                     <td contentEditable="true"></td>
                     <td contentEditable="true"></td>
                     <td contentEditable="true"></td>
-                  
+
                 </tr>
             </tbody>
         </table>
@@ -180,15 +169,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Nationality</th>
-                                <th>Date of Birth</th>
-                                <th>Passport Number</th>
-                                <th>Expiration Date</th>
-                                <th>Approval Number</th>
                             </tr>
                         </thead>
                         <tbody id="resultBody">
@@ -203,43 +185,43 @@
         </div>
     </div>
     <script>
-              let config = {};
+        let config = {};
 
-    function checkEncryptionKeyExpiration() {
-        // Retrieve encryption key and expiration time from sessionStorage
-        const encryptionKey = sessionStorage.getItem('encryptionKey');
-        const keyExpiration = sessionStorage.getItem('encryptionKeyExpiration');
-    
-        // Check if encryptionKey is not defined or null
-        if (!encryptionKey) {
-            handleExpiredKey();
-            return false;
-        }
-    
-        // Check if keyExpiration is not defined or key has expired
-        if (!keyExpiration || new Date().getTime() > parseInt(keyExpiration, 10)) {
-            handleExpiredKey();
-            return false;
-        }
-    
-        // Key is valid
-        return true;
-    }
-    
-    function handleExpiredKey() {
-         sessionStorage.removeItem('encryptionKey');
-        sessionStorage.removeItem('encryptionKeyExpiration');
-    
-         window.location.href = "./login.html";
-         event.preventDefault();
+        function checkEncryptionKeyExpiration() {
+            // Retrieve encryption key and expiration time from sessionStorage
+            const encryptionKey = sessionStorage.getItem('encryptionKey');
+            const keyExpiration = sessionStorage.getItem('encryptionKeyExpiration');
 
-    }
+            // Check if encryptionKey is not defined or null
+            if (!encryptionKey) {
+                handleExpiredKey();
+                return false;
+            }
+
+            // Check if keyExpiration is not defined or key has expired
+            if (!keyExpiration || new Date().getTime() > parseInt(keyExpiration, 10)) {
+                handleExpiredKey();
+                return false;
+            }
+
+            // Key is valid
+            return true;
+        }
+
+        function handleExpiredKey() {
+            sessionStorage.removeItem('encryptionKey');
+            sessionStorage.removeItem('encryptionKeyExpiration');
+
+            window.location.href = "./login.html";
+            event.preventDefault();
+
+        }
         function saveTableData() {
             checkEncryptionKeyExpiration();
             const table = document.getElementById('data-table');
             const rows = table.getElementsByTagName('tr');
             const tableData = [];
-             for (let i = 1; i < rows.length; i++) {
+            for (let i = 1; i < rows.length; i++) {
                 const cells = rows[i].getElementsByTagName('td');
                 const rowData = {
                     name: cells[0].innerText.trim(),
@@ -248,13 +230,12 @@
                     passportNumber: cells[3].innerText.trim(),
                     expirationDate: cells[4].innerText.trim(),
                     approvalNumber: cells[5].innerText.trim()
-                 
+
                 };
                 tableData.push(rowData);
             }
 
             // Send data to server via fetch
-            fetch(config.apiBaseUrl+'/Sec/SaveData', {
                 method: 'POST',
                 headers: {
                     'Accept': 'text/plain',
@@ -312,71 +293,60 @@
                 }
             };
         });
-function handleFileUpload(event) {
-    checkEncryptionKeyExpiration();
+        function handleFileUpload(event) {
+            checkEncryptionKeyExpiration();
 
-    try {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const sheetName = workbook.SheetNames[0]; // Assuming only one sheet
-                const worksheet = workbook.Sheets[sheetName];
+            try {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const sheetName = workbook.SheetNames[0]; // Assuming only one sheet
+                        const worksheet = workbook.Sheets[sheetName];
 
-                // Define the range B7:G20
-                const startRow = 6; // Row index in Excel (zero-indexed) for B7
-                const endRow = 19;  // Row index in Excel (zero-indexed) for G20
-                const startCol = 1; // Column index in Excel (zero-indexed) for B
-                const endCol = 6;   // Column index in Excel (zero-indexed) for G
+                        // Define the range B7:G20
+                        const startRow = 6; // Row index in Excel (zero-indexed) for B7
+                        const endRow = 19;  // Row index in Excel (zero-indexed) for G20
+                        const startCol = 1; // Column index in Excel (zero-indexed) for B
+                        const endCol = 6;   // Column index in Excel (zero-indexed) for G
 
-                const jsonData = [];
+                        const jsonData = [];
 
-                for (let rowNum = startRow; rowNum <= endRow; rowNum++) {
-                    const row = {};
-                    for (let colNum = startCol; colNum <= endCol; colNum++) {
-                        const cellAddress = XLSX.utils.encode_cell({ r: rowNum, c: colNum });
-                        const cell = worksheet[cellAddress];
-                        const headerAddress = XLSX.utils.encode_cell({ r: startRow, c: colNum });
-                        const headerCell = worksheet[headerAddress];
+                        for (let rowNum = startRow; rowNum <= endRow; rowNum++) {
+                            const row = {};
+                            for (let colNum = startCol; colNum <= endCol; colNum++) {
+                                const cellAddress = XLSX.utils.encode_cell({ r: rowNum, c: colNum });
+                                const cell = worksheet[cellAddress];
+                                const headerAddress = XLSX.utils.encode_cell({ r: startRow, c: colNum });
+                                const headerCell = worksheet[headerAddress];
+                                    else
+                                }
 
-                        if (headerCell && typeof headerCell.v === 'string') {
-                            if (cell && cell.f) {
-                                // If it's a formula, store it as a string
-                                row[headerCell.v.trim()] = '=' + cell.f;
-                            } else {
-                                // Otherwise, store its value as a string
-                                row[headerCell.v.trim()] = cell ? String(cell.v) : '';
                             }
+                            // Stop processing rows if "الاســـــــــــم" cell is empty
+ 
+                            jsonData.push(row);
                         }
-                        else
-{
+                      
+                        const validJsonData = validateJsonData(jsonData); // Validate jsonData before inserting rows
 
-    row[headerCell.v.trim]='error in Value';
-}
-
-                    }
-                    jsonData.push(row);
-                }
-
-                const validJsonData = validateJsonData(jsonData); // Validate jsonData before inserting rows
-
-                if (validJsonData.length > 0) {
-                    insertRowsFromJson(validJsonData);
+                        if (validJsonData.length > 0) {
+                            insertRowsFromJson(validJsonData);
+                        } else {
+                            displayErrorMessage('No valid rows found in the uploaded file.');
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
                 } else {
-                    displayErrorMessage('No valid rows found in the uploaded file.');
+                    displayErrorMessage('Error: No file selected.');
                 }
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            displayErrorMessage('Error: No file selected.');
+            } catch (ex) {
+                displayErrorMessage('Error in handleFileUpload: ' + ex);
+            }
         }
-    } catch (ex) {
-        displayErrorMessage('Error in handleFileUpload: ' + ex);
-    }
-}
-      function insertRowsFromJson(jsonData) {
+        function insertRowsFromJson(jsonData) {
             checkEncryptionKeyExpiration();
 
             clearTable();
@@ -385,7 +355,6 @@ function handleFileUpload(event) {
                 const newRow = dataTable.insertRow(-1);
                 newRow.className = index % 2 === 0 ? 'even-row' : 'odd-row';
 
-                const order = [ 6, 5, 4, 3, 2, 1]; // The order of columns
                 const keys = Object.keys(data);
 
                 order.forEach((num, i) => {
@@ -396,7 +365,6 @@ function handleFileUpload(event) {
                 });
 
                 // Ensure all columns are filled
-                while (newRow.cells.length < 8) {
                     const cell = newRow.insertCell(-1);
                     cell.contentEditable = true;
                 }
@@ -440,7 +408,6 @@ function handleFileUpload(event) {
 
             var searchValue = document.getElementById('search').value;
 
-            var url = config.apiBaseUrl+'/Sec/SearchData?query=' + encodeURIComponent(searchValue);
 
             fetch(url)
                 .then(response => response.json())
@@ -474,23 +441,22 @@ function handleFileUpload(event) {
         });
 
         document.getElementById('logout-link').addEventListener('click', function (event) {
-    event.preventDefault(); // Prevent the default link behavior
-    window.location.href = "./login.html";
-    sessionStorage.removeItem('encryptionKey');
-    const keyExpiration = sessionStorage.removeItem('encryptionKeyExpiration');
-    event.preventDefault(); // Prevent the default link behavior
+            event.preventDefault(); // Prevent the default link behavior
+            window.location.href = "./login.html";
+            sessionStorage.removeItem('encryptionKey');
+            const keyExpiration = sessionStorage.removeItem('encryptionKeyExpiration');
+            event.preventDefault(); // Prevent the default link behavior
 
-});
+        });
         document.getElementById('generate-btn').addEventListener('click', function () {
             checkEncryptionKeyExpiration();
-            
+
             const workbook = XLSX.utils.book_new(); // Create a new workbook
             const worksheetData = [];
             const dataTable = document.getElementById('data-table');
             const rows = Array.from(dataTable.getElementsByTagName('tr')).reverse(); // Reverse rows
 
             // Add headers
-            const headers = ['Name',' nationality', 'date of birth', 'passport number',' expiration date', 'approval number'];
             worksheetData.push(headers);
 
             // Iterate through table rows and collect data
@@ -502,7 +468,6 @@ function handleFileUpload(event) {
                 }
                 worksheetData.push(rowData);
             }
-
             // Create a worksheet with the collected data
             const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
@@ -547,35 +512,98 @@ function handleFileUpload(event) {
             // Trigger the download of the created workbook
             XLSX.writeFile(workbook, 'generated_table.xlsx');
         });
-        
-        
-        
-        
-        
-function loadConfig() {
-    return fetch('./config.json')
-      .then(response => response.json())
-      .then(data => {
-        config = data;
-        console.log('Configuration loaded:', config);
-      })
-      .catch(error => {
-        console.error('Error loading configuration:', error);
-      });
-    }
 
 
-        
-        
-        
-        
-        
-        
-        </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+
+
+        function loadConfig() {
+            return fetch('./config.json')
+                .then(response => response.json())
+                .then(data => {
+                    config = data;
+                    console.log('Configuration loaded:', config);
+                })
+                .catch(error => {
+                    console.error('Error loading configuration:', error);
+                });
+        }
+
+
+        async function readExcelFromURL(data) {
+            try {
+                // Remove the first row
+                const modifiedData = data.slice(1);
+
+                // Fetch the Excel template file
+                const response = await fetch('./templete2.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+
+                // Create a new ExcelJS workbook
+                const workbook = new ExcelJS.Workbook();
+                await workbook.xlsx.load(arrayBuffer);
+
+                // Get the first sheet
+                const sheet = workbook.worksheets[0];
+                sheet.views = [
+                    { rightToLeft: true }
+                ];
+                // Apply right-to-left text alignment and font size to all cells
+                sheet.eachRow({ includeEmpty: true }, function (row) {
+                    row.eachCell({ includeEmpty: true }, function (cell) {
+                        cell.font = { size: 15 };
+                    });
+                });
+
+                // Modify the sheet with your data
+                const startRow =7; // Row index in Excel (1-based) for B4
+                const startCol = 2; // Column index in Excel (1-based) for B
+
+                // Fill data starting from row 4 (B4) to endRow and from column B to I
+                modifiedData.forEach((row, rowIndex) => {
+                    row.forEach((value, colIndex) => {
+                        const cell = sheet.getRow(startRow + rowIndex).getCell(startCol + colIndex);
+                        cell.value = value;
+                        // Apply right-to-left text alignment and font size
+                        cell.font = { size: 15 };
+                    });
+                });
+
+                // Convert workbook to Blob for saving
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Download the modified Excel file
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'modified_templaeeeete.xlsx'; // Provide a default filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                console.log('Modified Excel file downloaded.');
+
+                return true;
+            } catch (error) {
+                console.error('Error reading or modifying Excel file:', error);
+                return false;
+            }
+        }
+
+
+
+
+
+
+
+
+    </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 
 
 </body>
