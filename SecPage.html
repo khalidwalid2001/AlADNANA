@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Company Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.10/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert library -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+
+
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e4c4cf29; /* Gradient background */
+   
+}
+        /* Custom CSS for modal width */
+        .modal-dialog.modal-50 {
+            max-width: 50%;
+        }
+
+        .odd-row {
+            background-color: white;
+        }
+
+        .even-row {
+            background-color: lightgray;
+            /* Change this to the desired color */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            object-fit: cover;
+            height: 48px;
+        }
+
+        .navbar-brand span {
+            font-size: 2rem;
+            /* Increase the font size */
+            margin-left: 10px;
+            color: #8e1c46;
+            /* Specific color for the company name */
+            font-family: 'Arial', sans-serif;
+            /* Default font family */
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .mt-custom {
+            margin-top: 5rem !important;
+            /* Increase the top margin */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light" style="background-color: rgb(110 4 44 / 26%) !important;">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand" href="#">
+                    <img src="./PrimaryImage.jpg" alt="Red Logo"
+                        class="nav-icon">
+                    <span>Al-ADNANA</span>
+                </a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./PrimaryPage.html">Primary Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./SecPage.html">Secondary Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logout-link">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-custom">
+        <div class="d-flex mb-3 justify-content-between align-items-center">
+            <div class="col-md-6">
+                <div class="input-group my-3">
+                    <input type="text" class="form-control" id="search">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" id="searchBtn">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-secondary" onclick="window.addRow()">Add Row</button>
+                <label for="file-upload" class="btn btn-primary">Upload Excel</label>
+                <input id="file-upload" type="file" accept=".xlsx" style="display: none;"
+                    onchange="handleFileUpload(event)">
+
+            </div>
+        </div>
+        <table class="table table-bordered table-striped" id="data-table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Nationality</th>
+                    <th>Date of Birth</th>
+                    <th>Passport Number</th>
+                    <th>Expiration Date</th>
+                    <th>Approval Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="odd-row">
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                </tr>
+                <tr class="even-row">
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                </tr>
+                <tr class="odd-row">
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                </tr>
+                <tr class="even-row">
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                    <td contentEditable="true"></td>
+                  
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center mb-3">
+
+            <button type="button" class="btn btn-secondary btn-lg me-2" id="generate-btn"><i
+                    class="bi bi-printer-fill me-1"></i>Print</button>
+            <button type="button" class="btn btn-success btn-lg" id="save-btn" onclick="saveTableData()">
+                <i class="bi bi-save-fill me-1"></i>Save
+            </button>
+        </div>
+
+    </main> <!-- Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-50" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search Results</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Nationality</th>
+                                <th>Date of Birth</th>
+                                <th>Passport Number</th>
+                                <th>Expiration Date</th>
+                                <th>Approval Number</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultBody">
+                            <!-- Results will be appended here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+              let config = {};
+
+    function checkEncryptionKeyExpiration() {
+        // Retrieve encryption key and expiration time from sessionStorage
+        const encryptionKey = sessionStorage.getItem('encryptionKey');
+        const keyExpiration = sessionStorage.getItem('encryptionKeyExpiration');
+    
+        // Check if encryptionKey is not defined or null
+        if (!encryptionKey) {
+            handleExpiredKey();
+            return false;
+        }
+    
+        // Check if keyExpiration is not defined or key has expired
+        if (!keyExpiration || new Date().getTime() > parseInt(keyExpiration, 10)) {
+            handleExpiredKey();
+            return false;
+        }
+    
+        // Key is valid
+        return true;
+    }
+    
+    function handleExpiredKey() {
+         sessionStorage.removeItem('encryptionKey');
+        sessionStorage.removeItem('encryptionKeyExpiration');
+    
+         window.location.href = "./login.html";
+         event.preventDefault();
+
+    }
+        function saveTableData() {
+            checkEncryptionKeyExpiration();
+            const table = document.getElementById('data-table');
+            const rows = table.getElementsByTagName('tr');
+            const tableData = [];
+             for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const rowData = {
+                    name: cells[0].innerText.trim(),
+                    nationality: cells[1].innerText.trim(),
+                    dateOfBirth: cells[2].innerText.trim(),
+                    passportNumber: cells[3].innerText.trim(),
+                    expirationDate: cells[4].innerText.trim(),
+                    approvalNumber: cells[5].innerText.trim()
+                 
+                };
+                tableData.push(rowData);
+            }
+
+            // Send data to server via fetch
+            fetch(config.apiBaseUrl+'/Sec/SaveData', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'text/plain',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tableData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Data Saved',
+                            text: 'Your table data has been saved successfully!',
+                        });
+                    } else {
+                        throw new Error('Failed to save data');
+                    }
+                })
+                .then(data => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data Saved',
+                        text: 'Your table data has been saved successfully!',
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Save Failed',
+                        text: 'There was an error saving your data.',
+                    });
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            checkEncryptionKeyExpiration();
+            loadConfig();
+            window.addRow = function () {
+                checkEncryptionKeyExpiration();
+                const dataTable = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+                const newRow = dataTable.insertRow(-1);
+                const rowCount = dataTable.rows.length;
+
+                // Apply alternating background colors
+                if (rowCount % 2 === 0) {
+                    newRow.className = 'even-row';
+                } else {
+                    newRow.className = 'odd-row';
+                }
+
+                for (let i = 0; i < 6; i++) { // Assuming 8 columns
+                    const cell = newRow.insertCell(i);
+                    cell.contentEditable = true; // Make cells editable
+                }
+            };
+        });
+function handleFileUpload(event) {
+    checkEncryptionKeyExpiration();
+
+    try {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0]; // Assuming only one sheet
+                const worksheet = workbook.Sheets[sheetName];
+
+                // Define the range B7:G20
+                const startRow = 6; // Row index in Excel (zero-indexed) for B7
+                const endRow = 19;  // Row index in Excel (zero-indexed) for G20
+                const startCol = 1; // Column index in Excel (zero-indexed) for B
+                const endCol = 6;   // Column index in Excel (zero-indexed) for G
+
+                const jsonData = [];
+
+                for (let rowNum = startRow; rowNum <= endRow; rowNum++) {
+                    const row = {};
+                    for (let colNum = startCol; colNum <= endCol; colNum++) {
+                        const cellAddress = XLSX.utils.encode_cell({ r: rowNum, c: colNum });
+                        const cell = worksheet[cellAddress];
+                        const headerAddress = XLSX.utils.encode_cell({ r: startRow, c: colNum });
+                        const headerCell = worksheet[headerAddress];
+
+                        if (headerCell && typeof headerCell.v === 'string') {
+                            if (cell && cell.f) {
+                                // If it's a formula, store it as a string
+                                row[headerCell.v.trim()] = '=' + cell.f;
+                            } else {
+                                // Otherwise, store its value as a string
+                                row[headerCell.v.trim()] = cell ? String(cell.v) : '';
+                            }
+                        }
+                        else
+{
+
+    row[headerCell.v.trim]='error in Value';
+}
+
+                    }
+                    jsonData.push(row);
+                }
+
+                const validJsonData = validateJsonData(jsonData); // Validate jsonData before inserting rows
+
+                if (validJsonData.length > 0) {
+                    insertRowsFromJson(validJsonData);
+                } else {
+                    displayErrorMessage('No valid rows found in the uploaded file.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            displayErrorMessage('Error: No file selected.');
+        }
+    } catch (ex) {
+        displayErrorMessage('Error in handleFileUpload: ' + ex);
+    }
+}
+      function insertRowsFromJson(jsonData) {
+            checkEncryptionKeyExpiration();
+
+            clearTable();
+            const dataTable = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+            jsonData.forEach((data, index) => {
+                const newRow = dataTable.insertRow(-1);
+                newRow.className = index % 2 === 0 ? 'even-row' : 'odd-row';
+
+                const order = [ 6, 5, 4, 3, 2, 1]; // The order of columns
+                const keys = Object.keys(data);
+
+                order.forEach((num, i) => {
+                    const key = keys[i];
+                    const cell = newRow.insertCell(-1);
+                    cell.textContent = data[key] || ""; // Handle missing keys
+                    cell.contentEditable = true;
+                });
+
+                // Ensure all columns are filled
+                while (newRow.cells.length < 8) {
+                    const cell = newRow.insertCell(-1);
+                    cell.contentEditable = true;
+                }
+            });
+        }
+        function clearTable() {
+            try {
+                const dataTable = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+                while (dataTable.rows.length > 0) {
+                    dataTable.deleteRow(0);
+                }
+            }
+            catch (ex) {
+                displayErrorMessage("error in function clearTable:" + ex);
+            }
+        }
+        function validateJsonData(jsonData) {
+            checkEncryptionKeyExpiration();
+
+            try {
+                return jsonData.filter(data => {
+                    const keys = Object.keys(data);
+                    if (keys.length !== 6) return false;
+                    return keys.every(key => data[key].trim() !== "");
+                });
+            }
+            catch (ex) {
+                displayErrorMessage("error in function validateJsonData:" + ex);
+            }
+        }
+        function displayErrorMessage(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: message
+            });
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            checkEncryptionKeyExpiration();
+
+            var searchValue = document.getElementById('search').value;
+
+            var url = config.apiBaseUrl+'/Sec/SearchData?query=' + encodeURIComponent(searchValue);
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    var resultBody = document.getElementById('resultBody');
+                    resultBody.innerHTML = '';
+
+                    data.data.forEach(item => {
+                        var row = document.createElement('tr');
+                        for (var key in item) {
+                            var cell = document.createElement('td');
+                            cell.textContent = item[key];
+                            row.appendChild(cell);
+                        }
+                        resultBody.appendChild(row);
+                    });
+
+                    // Show the modal using Bootstrap 5
+                    var resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+                    resultModal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Display an error message using SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                    });
+                });
+        });
+
+        document.getElementById('logout-link').addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent the default link behavior
+    window.location.href = "./login.html";
+    sessionStorage.removeItem('encryptionKey');
+    const keyExpiration = sessionStorage.removeItem('encryptionKeyExpiration');
+    event.preventDefault(); // Prevent the default link behavior
+
+});
+        document.getElementById('generate-btn').addEventListener('click', function () {
+            checkEncryptionKeyExpiration();
+            
+            const workbook = XLSX.utils.book_new(); // Create a new workbook
+            const worksheetData = [];
+            const dataTable = document.getElementById('data-table');
+            const rows = Array.from(dataTable.getElementsByTagName('tr')).reverse(); // Reverse rows
+
+            // Add headers
+            const headers = ['Name',' nationality', 'date of birth', 'passport number',' expiration date', 'approval number'];
+            worksheetData.push(headers);
+
+            // Iterate through table rows and collect data
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const rowData = [];
+                for (let j = 0; j < cells.length; j++) {
+                    rowData.push(cells[j].textContent.trim());
+                }
+                worksheetData.push(rowData);
+            }
+
+            // Create a worksheet with the collected data
+            const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+            // Apply some styles
+            const range = XLSX.utils.decode_range(worksheet['!ref']);
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cell_address = { c: C, r: R };
+                    const cell_ref = XLSX.utils.encode_cell(cell_address);
+                    if (!worksheet[cell_ref]) continue;
+                    worksheet[cell_ref].s = {
+                        fill: {
+                            fgColor: { rgb: R === 0 ? "FFFF00" : "FFFFFF" }
+                        },
+                        font: {
+                            bold: R === 0,
+                            color: { rgb: "000000" }
+                        },
+                        alignment: {
+                            horizontal: "center",
+                            vertical: "center"
+                        }
+                    };
+                }
+            }
+
+            // Set column width
+            worksheet['!cols'] = [
+                { wpx: 150 },
+                { wpx: 100 },
+                { wpx: 100 },
+                { wpx: 150 },
+                { wpx: 150 },
+                { wpx: 100 },
+                { wpx: 100 },
+                { wpx: 150 }
+            ];
+
+            // Add the worksheet to the workbook
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+            // Trigger the download of the created workbook
+            XLSX.writeFile(workbook, 'generated_table.xlsx');
+        });
+        
+        
+        
+        
+        
+function loadConfig() {
+    return fetch('./config.json')
+      .then(response => response.json())
+      .then(data => {
+        config = data;
+        console.log('Configuration loaded:', config);
+      })
+      .catch(error => {
+        console.error('Error loading configuration:', error);
+      });
+    }
+
+
+        
+        
+        
+        
+        
+        
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+
+</body>
+
+</html>
